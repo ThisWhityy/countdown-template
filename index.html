@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown</title>
+    <!-- TITLE (for the site) -->
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #1a1a1a, #4b0082, #8a2be2, #1a1a1a);
+        background-size: 400% 400%;
+        animation: gradientAnimation 5s ease infinite;
+        color: #e0e0e0;
+        font-family: Arial, sans-serif;
+      }
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      #countdown-container {
+        text-align: center;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+      h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+        color: white;
+        font-weight: bold;
+      }
+      #countdown {
+        font-size: 7em;
+        color: white;
+        font-weight: bold;
+      }
+      .hidden {
+        display: none;
+      }
+      .confetti {
+        position: fixed;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        background-color: #ff0;
+        animation: confetti-fall 5s linear infinite;
+      }
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(0) rotate(0);
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="countdown-container">
+      <h1>Time till: New Year</h1>
+      <!-- Title of the countdown -->
+      <div id="countdown"></div>
+    </div>
+    <div id="ended-message" class="hidden">
+      <h1>END</h1>
+      <p>The countdown ended</p>
+    </div>
+    <script>
+      function updateCountdown() {
+        const now = new Date();
+        const targetTime = new Date("2025-01-01T00:00:01Z"); // Target time
+
+        const diff = targetTime - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (diff <= 0) {
+          clearInterval(countdownInterval);
+          document
+            .getElementById("countdown-container")
+            .classList.add("hidden");
+          document.getElementById("ended-message").classList.remove("hidden");
+          startConfetti();
+        } else {
+          document.getElementById("countdown").innerHTML = `${String(
+            days
+          ).padStart(2, "0")}:${String(hours).padStart(2, "0")}:${String(
+            minutes
+          ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        }
+      }
+
+      function startConfetti() {
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement("div");
+          confetti.classList.add("confetti");
+          confetti.style.left = `${Math.random() * 100}vw`;
+          confetti.style.backgroundColor = `hsl(${
+            Math.random() * 360
+          }, 100%, 50%)`;
+          confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+          confetti.style.animationDelay = `${Math.random() * 2}s`;
+          document.body.appendChild(confetti);
+        }
+      }
+
+      const countdownInterval = setInterval(updateCountdown, 1000);
+      updateCountdown();
+    </script>
+  </body>
+</html>
